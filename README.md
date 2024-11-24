@@ -1,368 +1,136 @@
-# COLOR_CONVERSIONS_OF-IMAGE
-## AIM
-Write a Python program using OpenCV that performs the following tasks:
+# IMAGE-TRANSFORMATIONS
 
-i) Read and Display an Image.
-
-ii) 	Draw Shapes and Add Text.
-
-iii) Image Color Conversion.
-
-iv) Access and Manipulate Image Pixels.
-
-v) Image Resizing
-
-vi) Image Cropping
-
-vii) Image Flipping
-
-viii)	Write and Save the Modified Image
-
+## Aim
+To perform image transformation such as Translation, Scaling, Shearing, Reflection, Rotation and Cropping using OpenCV and Python.
 
 ## Software Required:
 Anaconda - Python 3.7
 
 ## Algorithm:
 ### Step1:
-Load an image from your local directory and display it.
+Import necessary libraries such as OpenCV, NumPy, and Matplotlib for image processing and visualization.
+
 ### Step2:
-	Draw a line from the top-left to the bottom-right of the image.
-	Draw a circle at the center of the image.
-	Draw a rectangle around a specific region of interest in the image.
-	Add the text "OpenCV Drawing" at the top-left corner of the image.
+Read the input image using cv2.imread() and store it in a variable for further processing.
 
 ### Step3:
-	Convert the image from RGB to HSV and display it.
-	Convert the image from RGB to GRAY and display it.
-	Convert the image from RGB to YCrCb and display it.
-	Convert the HSV image back to RGB and display it.
+Apply various transformations like translation, scaling, shearing, reflection, rotation, and cropping by defining corresponding functions:
+
+1.Translation moves the image along the x or y-axis.
+
+2.Scaling resizes the image by scaling factors.
+
+3.Shearing distorts the image along one axis.
+
+4.Reflection flips the image horizontally or vertically.
+
+5.Rotation rotates the image by a given angle.
 
 ### Step4:
-	Access and print the value of the pixel at coordinates (100, 100).
-	Modify the color of the pixel at (200, 200) to white.
+Display the transformed images using Matplotlib for visualization. Convert the BGR image to RGB format to ensure proper color representation.
 
 ### Step5:
-	Resize the original image to half its size and display it.
-### Step6:
-	Crop a region of interest (ROI) from the image (e.g., a 100x100 pixel area starting at (50, 50)) and display it.
-### Step7:
-	Flip the original image horizontally and display it.
-	Flip the original image vertically and display it.
-### Step8:
-	Save the final modified image to your local directory.
-```
-Developed By: NAVEEN KUMAR B
-Register Number: 212222230091
-```
-# Program:
+Save or display the final transformed images for analysis and use plt.show() to display them inline in Jupyter or compatible environments.
 
-### 1)Read and Display an Image
-
-```Python
+## Program:
+```python
+Developed By:NAVEEN KUMAR B
+Register Number:212222230091
 import cv2
-image=cv2.imread('lokesh.jpg',1)
-cv2.imshow('Image Window', image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-``` 
- 
+import numpy as np
+import matplotlib.pyplot as plt
 
-### OUTPUT:
+# Load the image
+image = cv2.imread('flower.jpg')
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB for Matplotlib
 
-![image](https://github.com/user-attachments/assets/6be59e60-ce86-45d7-97fb-87a8f7d34a6f)
+# 1. Translation
+rows, cols, _ = image.shape
+M_translate = np.float32([[1, 0, 50], [0, 1, 100]])  # Translate by (50, 100) pixels
+translated_image = cv2.warpAffine(image_rgb, M_translate, (cols, rows))
 
+# 2. Scaling
+scaled_image = cv2.resize(image_rgb, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_LINEAR)  # Scale by 1.5x
 
- 
+# 3. Shearing
+M_shear = np.float32([[1, 0.5, 0], [0.5, 1, 0]])  # Shear with factor 0.5
+sheared_image = cv2.warpAffine(image_rgb, M_shear, (int(cols * 1.5), int(rows * 1.5)))
 
-### 2.) Draw Shapes and Add Text:
-i)Draw a line from the top-left to the bottom-right of the image.
+# 4. Reflection (Flip)
+reflected_image = cv2.flip(image_rgb, 1)  # Horizontal reflection (flip along y-axis)
 
-```Python
+# 5. Rotation
+M_rotate = cv2.getRotationMatrix2D((cols / 2, rows / 2), 45, 1)  # Rotate by 45 degrees
+rotated_image = cv2.warpAffine(image_rgb, M_rotate, (cols, rows))
 
-import cv2
-img = cv2.imread("lokesh.JPG")
-res = cv2.line(image, (0, 0),(689,389),(200, 100, 205), 10)
-cv2.imshow('Image Window', res)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# 6.Cropping
+cropped_image = image_rgb[50:300, 100:400]  # Crop a portion of the image
 
-
+# Plot the original and transformed images
+plt.figure(figsize=(12, 8))
 ```
-<br>
-<br>
-
-
-### OUTPUT:
-
-![image](https://github.com/user-attachments/assets/e3a27bac-a61b-4752-b52a-07bf4cda0dac)
-
-
-
- 
-### ii)Draw Shapes and Add Text
-```Python
-
-import cv2
-image = cv2.imread("lokesh.jpg")
-height, width, _ = image.shape
-res = cv2.circle(image,(width // 2, height // 2), 150, (255,0, 0), 10)
-cv2.imshow('Image Window', res)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
 ```
-<br>
-<br>
-
-
-### OUTPUT:
-
-![image](https://github.com/user-attachments/assets/834c5b6c-aef6-4101-8286-aefc8833a112)
-
-
-
-
-      
-### iii)Draw a rectangle around a specific region of interest in the image.
-```Python
-
-import cv2
-image = cv2.imread("lokesh.JPG")
-res_img=cv2.rectangle(image,(0,0),(689,389),(100,255,100),10)
-cv2.imshow('Image Window', res_img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+plt.imshow(image_rgb)
+plt.title("Original Image")
+plt.axis('off')
 ```
- <br>
- <br>
-
-### OUTPUT:
-
-![image](https://github.com/user-attachments/assets/f01cb346-e7e6-4328-9b58-544e11dd8b3e)
-
-
-
-
-      
-### iv)Add the text "OpenCV Drawing" at the top-left corner of the image.
-
- ```Python
-
-import cv2
-img = cv2.imread("lokesh.JPG")
-text = "OPENCV DRAWING"
-font = cv2.FONT_HERSHEY_SIMPLEX
-res = cv2.putText(img, text, (50,50), font,1, (255,255,255),2, cv2.LINE_AA)
-cv2.imshow('Image Window', res)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-
+# Output:
+![4(7)](https://github.com/user-attachments/assets/d43d12b1-f6c1-4539-9e3b-2a0b4803560e)
+# 1. Translation
 ```
-<br>
-<br>
-
-    
-### OUTPUT:
-
-![image](https://github.com/user-attachments/assets/d22ba7ea-836d-4d0c-a1e0-7737fe1f89c3)
-
-
-
-
-### 3)Image Color Conversion
-i)Convert the image from RGB to HSV and display it.
-```Python
-
-import cv2
-img = cv2.imread('lokesh.jpg',1)
-cv2.imshow('Original Image',img)
-BGR = cv2.cvtColor(img,cv2.COLOR_HSV2BGR)
-cv2.imshow('HSV2RGB',BGR)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-```
-
-
-### OUTPUT:
-
-![image](https://github.com/user-attachments/assets/0f756ccf-6676-47f4-8efa-09cd8e327f4c)
-
-#### ii.)Convert the image from RGB to GRAY and display it.
-```Python
-import cv2
-img = cv2.imread('lokesh.jpg',1)
-cv2.imshow('Original Image',img)
-gray2 = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
-cv2.imshow('RGB2GRAY',gray2)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-```
-
-### Output:
-![image](https://github.com/user-attachments/assets/94e40033-ac7e-4c26-b212-de969150c960)
-
-
-
-#### iii.)Convert the image from RGB to YCrCb and display it.
-```Python
-import cv2
-img = cv2.imread('lokesh.jpg',1)
-cv2.imshow('Original Image',img)
-YCrCb1 = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-cv2.imshow('RGB-2-YCrCb',YCrCb1)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
+plt.imshow(translated_image)
+plt.title("Translated Image")
+plt.axis('off')
 ```
 ### Output:
-![image](https://github.com/user-attachments/assets/91a532c1-45a8-492f-bd45-1b06811261f4)
-
-
-#### iv.)Convert the HSV image back to RGB and display it.
-```Python
-import cv2
-img = cv2.imread('lokesh.jpg',1)
-cv2.imshow('Original Image',img)
-BGR = cv2.cvtColor(img,cv2.COLOR_HSV2BGR)
-cv2.imshow('HSV2RGB',BGR)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+![4(1)](https://github.com/user-attachments/assets/8950440f-6641-45ef-8795-311b16c96ade)
+# 2. Scaling
 ```
-<br>
-<br>
-
-### Output:
-![image](https://github.com/user-attachments/assets/6eeae811-4921-4c60-807b-b20722b980ba)
-
-## 4. Access and Manipulate Image Pixels:
-```Python
-
-import cv2
-img = cv2.imread('lokesh.jpg', 1)
-cv2.imshow('Original Image', img)
-pixel_value = img[100, 100]
-print(f"Pixel value at (100, 100): {pixel_value}")
-img[199, 199] = [255, 255, 255] 
-cv2.imshow('Modified Image', img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
+plt.imshow(scaled_image)
+plt.title("Scaled Image")
+plt.axis('off')
 ```
-<br>
-<br>
-
 ### Output:
-
-![image](https://github.com/user-attachments/assets/f7f4945d-e95a-4f30-97c7-8753fcdfa6dc)
-
-
-
-![image](https://github.com/user-attachments/assets/94468ffb-9d13-4c06-b638-43b2e7603139)
-
-
-## 5. Image Resizing:
-```Python
-width=600
-height=800
-half_width=300
-half_height=400
-resized_img = cv2.resize(image, (300, 400))
-cv2.imshow('Original',image)
-cv2.imshow('resized',resized_img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
+![4(2)](https://github.com/user-attachments/assets/4f093ce8-6035-4e75-95d7-09d01e84bd09)
+# 3. Shearing
 ```
-<br>
-<br>
-
-### Output:
-![image](https://github.com/user-attachments/assets/844b9287-5cb2-46e3-81b9-a0d18057df27)
-
-## 6.Image Cropping:
-```Python
-
-import cv2
-image1=cv2.imread('lokesh.jpg',1)
-x, y = 50, 50
-width, height = 100, 100
-roi = image1[y:y + height, x:x + width]
-cv2.imshow('Cropped Image', roi)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
+plt.imshow(sheared_image)
+plt.title("Sheared Image")
+plt.axis('off')
 ```
-<br>
-<br>
-
 ### Output:
-![image](https://github.com/user-attachments/assets/ebd2f7f8-dda2-4d2f-954c-8512bd153f0c)
-
-
-
-
-## 7.Image Flipping:
-i.)Flip the original image horizontally and display it.
-```Python
-
-import cv2
-img = cv2.imread("lokesh.JPG")
-res=cv2.rotate(img,cv2.ROTATE_180)
-cv2.imshow('Original',img)
-cv2.imshow('Image Window', res)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
+![4(3)](https://github.com/user-attachments/assets/7280ec4d-30f1-4f8b-bd54-6052e26bd5ce)
+# 4. Reflection (Flip)
 ```
-<br>
-<br>
-
-### Output:
-
-![image](https://github.com/user-attachments/assets/ad30a5d5-5730-4ef7-b360-96307395457e)
-
-
-
-#### ii.)Flip the original image vertically and display it.
-
-```Python
-import cv2
-
-img = cv2.imread("lokesh.JPG")
-res=cv2.rotate(img,cv2.ROTATE_90_CLOCKWISE)
-# Display the HSV image
-cv2.imshow('Original',img)
-cv2.imshow('Image Window', res)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
+plt.imshow(reflected_image)
+plt.title("Reflected Image")
+plt.axis('off')
 ```
-<br>
-<br>
-
 ### Output:
-
-![image](https://github.com/user-attachments/assets/082a4875-1de0-42f8-aa4d-103f14b3f531)
-
-
-## 8. Write and Save the Modified Image:
-```Python
-import cv2
-img = cv2.imread("lokesh.JPG")
-cv2.imwrite('lokesh1.jpg',img)
+![4(4)](https://github.com/user-attachments/assets/d6cd14c6-922d-4173-a5e0-574a5311770c)
+# 5. Rotation
 ```
-<br>
-<br>
-
+plt.imshow(rotated_image)
+plt.title("Rotated Image")
+plt.axis('off')
+```
 ### Output:
+![4(5)](https://github.com/user-attachments/assets/43bdafba-d400-413d-8cd3-f2da70d79e54)
+# 6.Cropping
+```
+plt.tight_layout()
+plt.show()
 
-![image](https://github.com/user-attachments/assets/43383114-742c-4e01-b61e-f57d25b373fd)
+# Plot cropped image separately as its aspect ratio may be different
+plt.figure(figsize=(4, 4))
+plt.imshow(cropped_image)
+plt.title("Cropped Image")
+plt.axis('off')
+plt.show()
+```
+### Output:
+![4(6)](https://github.com/user-attachments/assets/cd85b5d6-1919-466c-979e-6d461dca057c)
 
+## Result: 
 
-
-## Result:
-Thus the images are read, displayed, and written ,and color conversion was performed  successfully using the python program.
-
-
+Thus the different image transformations such as Translation, Scaling, Shearing, Reflection, Rotation and Cropping are done using OpenCV and python programming.
